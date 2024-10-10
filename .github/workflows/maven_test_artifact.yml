@@ -112,7 +112,8 @@ jobs:
       - name: "Test ${{ inputs.project }}"
         run: |
           mvn -T 1C --batch-mode -Dmaven.test.failure.ignore=true test \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              --project=${{ inputs.project }}
 
       - uses: actions/upload-artifact@v3  # upload test results
         if: success() || failure()        # run this step even if previous step failed
