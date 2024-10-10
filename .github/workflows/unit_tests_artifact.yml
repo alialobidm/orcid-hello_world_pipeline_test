@@ -63,7 +63,7 @@ on:
         default: true
 
 jobs:
-  tst_ml:
+  tst_hw:
     uses: ./.github/workflows/maven_test_artifact.yml
     with:
       project: hello_world
