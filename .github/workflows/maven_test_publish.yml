@@ -141,7 +141,7 @@ jobs:
         if: failure() # only report if a test has failed
         with:
           report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
-          annotate_only: true
+          annotate_only: false
 
 
 
