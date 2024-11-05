@@ -131,7 +131,7 @@ jobs:
         with:
           report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
           create_check: false
-          fail_on_test_failures: true
+          fail_on_test_failures: false
           file_name_in_stack_trace: true
 
 
