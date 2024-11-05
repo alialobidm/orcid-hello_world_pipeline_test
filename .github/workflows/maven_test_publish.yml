@@ -111,9 +111,9 @@ jobs:
 ########################################################################################
       - name: "Test ${{ inputs.project }}"
         run: |
-          mvn -T 1C --batch-mode -Dmaven.test.failure.ignore=true test \
+          mvn -T 1C --batch-mode test \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              --projects=${{ inputs.project }}
+              --projects=${{ inputs.project }} --fail-at-end
 
       # NOTE: if the above test fail then this step will report that failure and stop the run
 #       - name: Publish Unit Test Results
