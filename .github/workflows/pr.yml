@@ -17,8 +17,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit_tests_publish:
-    uses: ./.github/workflows/unit_tests_publish.yml
+  mvn_test:
+    uses: ./.github/workflows/mvn_test.yml
     with:
       seed_maven_cache: true
       install_maven_dependencies: true
