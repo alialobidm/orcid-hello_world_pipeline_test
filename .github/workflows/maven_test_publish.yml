@@ -136,9 +136,9 @@ jobs:
 #           skip_publishing: false
 #           fail_if_no_tests: false
 
-      - name: Publish Unit Test Results non forked repo ${{ github.event.pull_request.head.repo.full_name }} equals ${{ github.repository }}
+      - name: Publish Unit Test Results non forked repo
         uses: mikepenz/action-junit-report@v5
-        if: failure() and ${{ github.event.pull_request.head.repo.full_name == github.repository }} # only report if a test has failed and we are a non forked repo
+        if: failure() && ${{ github.event.pull_request.head.repo.full_name == github.repository }} # only report if a test has failed and we are a non forked repo
         with:
           check_name: Unit Test Report ${{ inputs.project }}
           report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
@@ -146,7 +146,7 @@ jobs:
 
       - name: Publish Unit Test Results forked repo
         uses: mikepenz/action-junit-report@v5
-        if: failure() and ${{ github.event.pull_request.head.repo.full_name != github.repository }} # only report if a test has failed and we are a forked repo
+        if: failure() && ${{ github.event.pull_request.head.repo.full_name != github.repository }} # only report if a test has failed and we are a forked repo
         with:
           report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
           annotate_only: true # forked repo cannot write to checks
