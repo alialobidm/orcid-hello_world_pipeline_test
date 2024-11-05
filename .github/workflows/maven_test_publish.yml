@@ -115,16 +115,15 @@ jobs:
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               --projects=${{ inputs.project }} --fail-at-end
 
-      # NOTE: if the above test fail then this step will report that failure and stop the run
-#       - name: Publish Unit Test Results
-#         uses: dorny/test-reporter@e9fa2f582c0ebbe2e263fd18fad744d52e0b0203
-#         if: always()
-#         with:
-#           name: "maven_test_publish_${{ inputs.project }}"
-#           path: ${{ inputs.project }}/target/surefire-reports/*.xml
-#           reporter: java-junit
-#           fail-on-error: false
-# 
+      - name: Publish Unit Test Results
+        if: ${{ failure() && (github.event.pull_request.head.repo.full_name == github.repository) }} # only report if a test has failed and we are a non forked repo
+        uses: dorny/test-reporter@e9fa2f582c0ebbe2e263fd18fad744d52e0b0203
+        with:
+          name: "maven_test_publish_${{ inputs.project }}"
+          path: ${{ inputs.project }}/target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: false
+
 #       - name: Publish Unit Test Results
 #         uses: scacap/action-surefire-report@v1.8.0
 #         if: failure() # only report if a test has failed
@@ -136,14 +135,14 @@ jobs:
 #           skip_publishing: false
 #           fail_if_no_tests: false
 
-      - name: Publish Unit Test Results non forked repo
-        uses: mikepenz/action-junit-report@v5
-        if: ${{ failure() && (github.event.pull_request.head.repo.full_name == github.repository) }} # only report if a test has failed and we are a non forked repo
-        with:
-          check_name: Unit Test Report ${{ inputs.project }}
-          report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
-          annotate_only: false
-
+#       - name: Publish Unit Test Results non forked repo
+#         uses: mikepenz/action-junit-report@v5
+#         if: ${{ failure() && (github.event.pull_request.head.repo.full_name == github.repository) }} # only report if a test has failed and we are a non forked repo
+#         with:
+#           check_name: Unit Test Report ${{ inputs.project }}
+#           report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
+#           annotate_only: false
+# 
       - name: Publish Unit Test Results forked repo
         uses: mikepenz/action-junit-report@v5
         if: ${{ failure() &&  (github.event.pull_request.head.repo.full_name != github.repository) }} # only report if a test has failed and we are a forked repo
