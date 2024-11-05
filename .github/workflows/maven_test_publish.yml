@@ -130,7 +130,7 @@ jobs:
         if: failure() # only report if a test has failed
         with:
           report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
-          create_check: false
+          create_check: true
           fail_on_test_failures: false
           file_name_in_stack_trace: true
           skip_publishing: false
