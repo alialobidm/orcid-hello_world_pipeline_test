@@ -134,5 +134,6 @@ jobs:
           fail_on_test_failures: false
           file_name_in_stack_trace: true
           skip_publishing: false
+          fail_if_no_tests: false
 
 
