@@ -69,8 +69,8 @@ jobs:
 
 ##############################################################################
 
-  unit_tests_publish:
-    uses: ./.github/workflows/maven_test_publish.yml
+  mvn_test:
+    uses: ./.github/workflows/mvn_test.yml
     with:
       version_tag: ${{ inputs.version_tag }}
       bump: ${{ inputs.bump }}
@@ -86,7 +86,7 @@ jobs:
     secrets: inherit # pass all secrets for uploading assets
     needs:
       - seed_maven_cache
-      - unit_tests_publish
+      - mvn_test
     permissions:
       checks: write
       contents: read

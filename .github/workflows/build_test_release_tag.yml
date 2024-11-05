@@ -54,8 +54,8 @@ jobs:
   lint:
     uses: ./.github/workflows/lint.yml
 
-  unit_tests_publish:
-    uses: ./.github/workflows/unit_tests_publish.yml
+  mvn_test:
+    uses: ./.github/workflows/mvn_test.yml
     with:
       version_tag: ${{ inputs.version_tag }}
       bump: ${{ inputs.bump }}
@@ -70,7 +70,7 @@ jobs:
     secrets: inherit # pass all secrets for uploading assets
     needs:
       - lint
-      - unit_tests_publish
+      - mvn_test
     permissions:
       checks: write
       contents: read
