@@ -127,11 +127,12 @@ jobs:
 # 
       - name: Publish Unit Test Results
         uses: scacap/action-surefire-report@v1.8.0
-        if: always()
+        if: failure() # only report if a test has failed
         with:
           report_paths: ${{ inputs.project }}/target/surefire-reports/*.xml
           create_check: false
           fail_on_test_failures: false
           file_name_in_stack_trace: true
+          skip_publishing: true
 
 
