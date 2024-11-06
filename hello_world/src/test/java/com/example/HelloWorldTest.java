@@ -17,4 +17,12 @@ public class HelloWorldTest {
         // This assertion will fail
         assertTrue(false, "This is a failing test to test the pipeline.");
     }
+
+    @Test
+    public void testFailingAssertionMore() {
+        // This assertion will fail
+        assertTrue(false, "This is also failing test to test the pipeline.");
+    }
+
+
 }

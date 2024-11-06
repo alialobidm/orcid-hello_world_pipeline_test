@@ -1,7 +1,6 @@
-name: maven_test_artifact
+name: mvn_test
 
-# run maven tests and upload results as an artifact
-# can be run from a pr
+# run maven tests and publish results in one step
 
 permissions:
   checks: write
@@ -78,7 +77,13 @@ on:
 
 
 jobs:
-  maven_test:
+  mvn_test:
+
+    strategy:
+      matrix:
+        include:
+          - project: hello_world
+
     runs-on: ubuntu-latest
     steps:
       - name: git-checkout-ref-action
@@ -109,14 +114,25 @@ jobs:
           java-version: '11'
 
 ########################################################################################
-      - name: "Test ${{ inputs.project }}"
+      - name: "Test ${{ matrix.project }}"
         run: |
-          mvn -T 1C --batch-mode -Dmaven.test.failure.ignore=true test \
+          mvn -T 1C --batch-mode test \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              --projects=${{ inputs.project }}
+              --projects=${{ matrix.project }} --fail-at-end
 
-      - uses: actions/upload-artifact@v3  # upload test results
-        if: success() || failure()        # run this step even if previous step failed
+      - name: Publish unit test report for non forked repo
+        if: ${{ failure() && (github.event.pull_request.head.repo.full_name == github.repository) }} # only report if a test has failed and we are a non forked repo
+        uses: dorny/test-reporter@e9fa2f582c0ebbe2e263fd18fad744d52e0b0203
         with:
-          name: ${{ inputs.project }}
-          path: ${{ inputs.project }}/target/surefire-reports/*.xml
+          name: "Unit test report for ${{ matrix.project }}"
+          path: ${{ matrix.project }}/target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: true
+
+      - name: Annotate only test report for forked repo
+        uses: mikepenz/action-junit-report@ec3a351c13e080dc4fa94c49ab7ad5bf778a9668 # v5
+        if: ${{ failure() &&  (github.event.pull_request.head.repo.full_name != github.repository) }} # only report if a test has failed and we are a forked repo
+        with:
+          report_paths: ${{ matrix.project }}/target/surefire-reports/*.xml
+          annotate_only: true # forked repo cannot write to checks so just do annotations
+
