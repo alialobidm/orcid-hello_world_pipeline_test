@@ -1,2 +1,6 @@
+# Overview
 
-test
+This is a public repo to test our patterns for unit tests when using forked repos.
+
+The tests are designed to run fast and fail
+
